@@ -4,7 +4,7 @@ from datetime import datetime
 
 # Initialize session state for dynamic widgets
 if 'available_widgets' not in st.session_state:
-    st.session_state['available_widgets'] = ['AI Insights']
+    st.session_state['available_widgets'] = ['AI Insights', 'Total Accounts']
 if 'dashboard_widgets' not in st.session_state:
     st.session_state['dashboard_widgets'] = []
 
@@ -35,7 +35,22 @@ def render_widgets():
             with st.container():
                 st.markdown("### 🤖 AI Insights")
                 st.write("Your Dining spending was higher by 15% than last month.")
-                if st.button("Remove AI Insights", key=f"remove_{widget}"):
+                if st.button("❌", key=f"remove_{widget}"):
+                    st.session_state['dashboard_widgets'].remove(widget)
+                    st.session_state['available_widgets'].append(widget)
+
+        elif widget == 'Total Accounts':
+            with st.container():
+                st.markdown("### 🏦 Total in Accounts")
+                total_balance = 20000 + 15000  # Sum of all accounts
+                st.markdown(f"""
+                <div style="padding: 15px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
+                    <h2 style="color: #333;">Total Balance: €{total_balance:,}</h2>
+                    <p>💳 <strong>Intesa Sanpaolo:</strong> €20,000</p>
+                    <p>💳 <strong>Unicredit:</strong> €15,000</p>
+                </div>
+                """, unsafe_allow_html=True)
+                if st.button("❌", key=f"remove_{widget}"):
                     st.session_state['dashboard_widgets'].remove(widget)
                     st.session_state['available_widgets'].append(widget)
 
