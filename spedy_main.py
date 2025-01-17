@@ -8,6 +8,11 @@ if 'available_widgets' not in st.session_state:
 if 'dashboard_widgets' not in st.session_state:
     st.session_state['dashboard_widgets'] = []
 
+# Ensure "Total Accounts" is added by default on the first load
+if 'Total Accounts' not in st.session_state['dashboard_widgets'] and 'Total Accounts' in st.session_state['available_widgets']:
+    st.session_state['dashboard_widgets'].append('Total Accounts')
+    st.session_state['available_widgets'].remove('Total Accounts')
+
 # Sidebar for navigation
 st.sidebar.title("Menu")
 selection = st.sidebar.radio("Navigate", ["Dashboard", "AskSpendy", "Settings"])
