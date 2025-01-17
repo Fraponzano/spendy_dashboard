@@ -36,16 +36,15 @@ transactions_df = pd.DataFrame(data)
 # Function to render widgets on the dashboard
 def render_widgets():
     for widget in st.session_state['dashboard_widgets']:
-        if widget == 'AI Insights':
-            with st.container():
+        with st.expander(widget, expanded=True):
+            if widget == 'AI Insights':
                 st.markdown("### AI Insights")
                 st.write("Your Dining spending was higher by 15% than last month.")
                 if st.button("Remove", key=f"remove_{widget}"):
                     st.session_state['dashboard_widgets'].remove(widget)
                     st.session_state['available_widgets'].append(widget)
 
-        elif widget == 'Total Accounts':
-            with st.container():
+            elif widget == 'Total Accounts':
                 st.markdown("### Total in Accounts")
                 total_balance = 20000 + 15000  # Sum of all accounts
                 st.markdown(f"""
@@ -73,18 +72,15 @@ if selection == "Dashboard":
                 st.session_state['show_widget_selector'] = True
 
     if st.session_state.get('show_widget_selector', False):
-        with st.expander("Available Widgets"):
+        with st.expander("Available Widgets", expanded=True):
             for widget in st.session_state['available_widgets']:
                 if st.button(f"Add {widget}", key=f"add_{widget}"):
                     st.session_state['dashboard_widgets'].append(widget)
                     st.session_state['available_widgets'].remove(widget)
                     st.session_state['show_widget_selector'] = False
 
-    # Render widgets on the dashboard
-    render_widgets()
-
-    # Spacer for visual separation
-    st.markdown("<div style='margin-bottom: 30px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-bottom: 30px;'></div>", unsafe_allow_html=True)  # Add spacing
+    render_widgets()  # Render the widgets
 
     # Collapsible widget box for recent transactions
     with st.expander("Recent Transactions", expanded=True):
