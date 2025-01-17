@@ -2,6 +2,12 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
+# Initialize session state for dynamic widgets
+if 'available_widgets' not in st.session_state:
+    st.session_state['available_widgets'] = ['AI Insights']
+if 'dashboard_widgets' not in st.session_state:
+    st.session_state['dashboard_widgets'] = []
+
 # Sidebar for navigation
 st.sidebar.title("Menu")
 selection = st.sidebar.radio("Navigate", ["Dashboard", "AskSpendy", "Settings"])
@@ -22,33 +28,40 @@ data = [
 
 transactions_df = pd.DataFrame(data)
 
+# Function to render widgets on the dashboard
+def render_widgets():
+    for widget in st.session_state['dashboard_widgets']:
+        if widget == 'AI Insights':
+            with st.container():
+                st.markdown("### 🤖 AI Insights")
+                st.write("Your Dining spending was higher by 15% than last month.")
+                if st.button("Remove AI Insights", key=f"remove_{widget}"):
+                    st.session_state['dashboard_widgets'].remove(widget)
+                    st.session_state['available_widgets'].append(widget)
+
 # Main area based on sidebar selection
 if selection == "Dashboard":
     # Title and subtitle
     st.markdown("<h1 style='margin-top: -50px;'>Dashboard</h1>", unsafe_allow_html=True)
     st.markdown("<h3 style='margin-top: -20px;'>Welcome to your finance and budgeting app</h3>", unsafe_allow_html=True)
 
-    # Create layout with columns and spacing
-    col1, col2 = st.columns(2)
+    # "Add Widget" button in the top-right corner
+    with st.container():
+        col1, col2 = st.columns([4, 1])
+        with col2:
+            if st.button("Add Widget"):
+                st.session_state['show_widget_selector'] = True
 
-    with col1:
-        # Widget box for total balance
-        st.markdown("---")
-        st.markdown("### 🏦 Total in Accounts")
-        total_balance = 20000 + 15000  # Sum of all accounts
-        st.markdown(f"""
-        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
-            <h2 style="color: #333;">Total Balance: €{total_balance:,}</h2>
-            <p>💳 <strong>Intesa Sanpaolo:</strong> €20,000</p>
-            <p>💳 <strong>Unicredit:</strong> €15,000</p>
-        </div>
-        """, unsafe_allow_html=True)
+    if st.session_state.get('show_widget_selector', False):
+        with st.expander("Available Widgets"):
+            for widget in st.session_state['available_widgets']:
+                if st.button(f"Add {widget}", key=f"add_{widget}"):
+                    st.session_state['dashboard_widgets'].append(widget)
+                    st.session_state['available_widgets'].remove(widget)
+                    st.session_state['show_widget_selector'] = False
 
-    with col2:
-        # Placeholder for other content or widgets
-        st.markdown("---")
-        st.markdown("### ℹ️ Quick Overview")
-        st.write("Add other widgets or content here.")
+    # Render widgets on the dashboard
+    render_widgets()
 
     # Spacer for visual separation
     st.markdown("<div style='margin-bottom: 30px;'></div>", unsafe_allow_html=True)
