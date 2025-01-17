@@ -4,9 +4,9 @@ from datetime import datetime
 
 # Initialize session state for dynamic widgets
 if 'available_widgets' not in st.session_state:
-    st.session_state['available_widgets'] = ['AI Insights']
+    st.session_state['available_widgets'] = ['AI Insights', 'Total Accounts']
 if 'dashboard_widgets' not in st.session_state:
-    st.session_state['dashboard_widgets'] = ['Total Accounts']
+    st.session_state['dashboard_widgets'] = []
 
 # Sidebar for navigation
 st.sidebar.title("Menu")
