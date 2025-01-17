@@ -1,8 +1,26 @@
 import streamlit as st
+import pandas as pd
+from datetime import datetime
 
 # Sidebar for navigation
 st.sidebar.title("Menu")
 selection = st.sidebar.radio("Navigate", ["Dashboard", "AskSpendy", "Settings"])
+
+# Sample transactions data
+data = [
+    {"amount": -50.75, "account": "Intesa Sanpaolo", "date": "2025-01-15", "place": "Supermarket", "category": "Groceries"},
+    {"amount": -120.00, "account": "Unicredit", "date": "2025-01-14", "place": "Gas Station", "category": "Transportation"},
+    {"amount": -300.00, "account": "Intesa Sanpaolo", "date": "2025-01-13", "place": "Electronics Store", "category": "Shopping"},
+    {"amount": -15.25, "account": "Unicredit", "date": "2025-01-12", "place": "Cafe", "category": "Dining"},
+    {"amount": -500.00, "account": "Intesa Sanpaolo", "date": "2025-01-11", "place": "Online Store", "category": "Shopping"},
+    {"amount": -20.00, "account": "Unicredit", "date": "2025-01-10", "place": "Pharmacy", "category": "Health"},
+    {"amount": -75.00, "account": "Intesa Sanpaolo", "date": "2025-01-09", "place": "Restaurant", "category": "Dining"},
+    {"amount": -45.00, "account": "Unicredit", "date": "2025-01-08", "place": "Cinema", "category": "Entertainment"},
+    {"amount": -60.00, "account": "Intesa Sanpaolo", "date": "2025-01-07", "place": "Gym", "category": "Fitness"},
+    {"amount": -25.00, "account": "Unicredit", "date": "2025-01-06", "place": "Bookstore", "category": "Education"},
+]
+
+transactions_df = pd.DataFrame(data)
 
 # Main area based on sidebar selection
 if selection == "Dashboard":
@@ -13,8 +31,7 @@ if selection == "Dashboard":
     # Widget box for accounts
     st.markdown("---")  # Horizontal rule for visual separation
     st.markdown("### 🏦 Total in Accounts")
-    
-    # Widget-like box styling
+
     total_balance = 20000 + 15000  # Sum of all accounts
     st.markdown(f"""
     <div style="padding: 15px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
@@ -23,6 +40,14 @@ if selection == "Dashboard":
         <p>💳 <strong>Unicredit:</strong> €15,000</p>
     </div>
     """, unsafe_allow_html=True)
+
+    # Collapsible widget box for recent transactions
+    with st.expander("Recent Transactions", expanded=True):
+        st.markdown("#### 📊 Recent Transactions")
+        st.dataframe(
+            transactions_df,
+            height=300,  # Adjust height for scrollable view
+        )
 
 elif selection == "AskSpendy":
     st.title("AskSpendy")
